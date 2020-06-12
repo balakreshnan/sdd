@@ -27,3 +27,29 @@ Create a folder where to download the code files and save the weights file there
 
 https://github.com/nadav01/sdd
 I have forked from above as well as backup - https://github.com/balakreshnan/sdd
+The above code uses Yolo models to detect person and then do calculation to create alerts.
+
+Huge thanksa to Nadav Leobl and Lorea Arrizabalaga
+
+Make sure Code and Yolo weights and config files are in the same folder.
+
+## Open the Code to Run
+
+Now open Visual Studio Code and open the folder.
+```
+Note: Conda environment has to be setup and necessary libraries have to be installed. If necessary please do so.
+```
+Wait until all dependency check are all completed.
+Now on the right top corner you should see a play button and press that and see if it works.
+
+## Run sdd_gui.py Code
+
+You should see a popup screen with start button.
+Just press the start button to invoke the laptop camera.
+Test the model and see if works.
+
+## Convert the code to deployment as iot edge
+
+## deploy to edge device
+
+## Conclusion
