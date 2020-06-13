@@ -1,8 +1,12 @@
-# Social Distancing AI modelling
+# Health Safety - Pandemic Social Distancing/Mask Application
 
 ## Use Case
 
-Based on the cornona virus situation recently in 2020 it has become apparent that social distancing enforcing is becoming common across industries where people gather. This could be any public or government or even corporate office spaces and manufacturing plants. Use case here is to detect person and identfying distance to see if they are maintaining distance between each other.
+Based on the cornona virus situation recently in 2020 it has become apparent that social distancing enforcing is becoming common across industries where people gather. This could be any public or government or even corporate office spaces and manufacturing plants. Use case here is to detect person and identfying distance to see if they are maintaining distance between each other. The solution has to scale and also ability to report. Data collection for machine learning or other AI modelling capability as well.
+
+# Architecture
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/SocialDistancing.jpg "Architecture")
 
 This article covers how to implement the solution using existing open source code that are available.
 
