@@ -29,7 +29,7 @@ https://github.com/nadav01/sdd
 I have forked from above as well as backup - https://github.com/balakreshnan/sdd
 The above code uses Yolo models to detect person and then do calculation to create alerts.
 
-Huge thanksa to Nadav Leobl and Lorea Arrizabalaga
+Huge thanks to Nadav Leobl and Lorea Arrizabalaga
 
 Make sure Code and Yolo weights and config files are in the same folder.
 
