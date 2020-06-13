@@ -1,4 +1,4 @@
-# Social Distiancing AI modelling
+# Social Distancing AI modelling
 
 ## Use Case
 
