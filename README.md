@@ -15,4 +15,4 @@ The idea here is not build from scrath but taking what is available and make it 
 
 ## Architecture minimized
 
-![alt text](https://github.com/balakreshnan/sdd/blob/master/images/SocialDistance1.jpg "Architecture")
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/SocialDistance2.jpg "Architecture")
