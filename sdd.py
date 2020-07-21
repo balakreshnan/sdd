@@ -1,13 +1,31 @@
 import cv2, numpy
 from twilio.rest import Client
 from playsound import playsound
+from azure.eventhub import EventHubClient, Sender, EventData
+import json
 
 confid, threshold = 0.5, 0.5
+
+ADDRESS = "amqps://babalingest.servicebus.windows.net/sddinput"
+USER = "ingest"
+KEY = "6Sur+IoqeH69ETumOzo0wh5V/L1FUOdpH0yzhK5cqWg="
 
 
 def dist(p1, p2):
     return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** 0.5
 
+def orgdist(p1, p2):
+    d = dist(p1[2], p2[2])
+    w = (p1[0] + p2[0]) / 2
+    h = (p1[1] + p2[1]) / 2
+    _ = 0
+    try:
+        _ = (p2[2][1] - p1[2][1]) / (p2[2][0] - p1[2][0])
+    except ZeroDivisionError:
+        _ = 1.633123935319537e+16
+        #print("Only 1 Person detected")
+    #print("Distance calculated: " + str(_))
+    return str(_)
 
 def isclose(p1, p2):
     d = dist(p1[2], p2[2])
@@ -18,7 +36,7 @@ def isclose(p1, p2):
         _ = (p2[2][1] - p1[2][1]) / (p2[2][0] - p1[2][0])
     except ZeroDivisionError:
         _ = 1.633123935319537e+16
-        print("Only 1 Person detected")
+        #print("Only 1 Person detected")
     ve = abs(_ / ((1 + _ ** 2) ** 0.5))
     ho = abs(1 / ((1 + _ ** 2) ** 0.5))
     d_hor = ho * d
@@ -27,7 +45,7 @@ def isclose(p1, p2):
     vc_calib_ver = h * 0.4 * 0.8 # the last one is the angle
     c_calib_hor = w * 1.7
     c_calib_ver = h * 0.2 * 0.8 # the last one is the angle
-    print("Distance calculated: " + str(_))
+    #print("Distance calculated: " + str(_))
     if 0 < d_hor < vc_calib_hor and 0 < d_ver < vc_calib_ver:
         return 1
     elif 0 < d_hor < c_calib_hor and 0 < d_ver < c_calib_ver:
@@ -106,6 +124,7 @@ def run(camera='webcam', sound=False, sms=''):
         boxes = []
         confidences = []
         classIDs = []
+        label = []
 
         for output in layerOutputs:
             for detection in output:
@@ -121,7 +140,8 @@ def run(camera='webcam', sound=False, sms=''):
                         boxes.append([x, y, int(width), int(height)])
                         confidences.append(float(confidence))
                         classIDs.append(classID)
-                        print("Boxes: " + str(box))
+                        label.append(LABELS[classID])
+                        #print("Boxes: " + str(box))
 
         idxs = cv2.dnn.NMSBoxes(boxes, confidences, confid, threshold)
 
@@ -142,9 +162,12 @@ def run(camera='webcam', sound=False, sms=''):
                 co_info.append([w, h, cen])
                 status.append(0)
 
+            #print("Center: " + str(center))
+
             for i in range(len(center)):
                 for j in range(len(center)):
                     ans = isclose(co_info[i], co_info[j])
+                    distance = orgdist(co_info[i], co_info[j])
 
                     if ans == 1:
                         close_pair.append([center[i], center[j]])
@@ -167,8 +190,14 @@ def run(camera='webcam', sound=False, sms=''):
 
                         if sound:
                             playsound('alarm.mp3', block=False)
-                    print(" Social Distance Answer: " + str(ans))
+                    
+            #print(" validated distance: " + str(ans))
+            #print(" validated distance: " + str(ans) + " Social Distance Answer: " + str(distance) + " value i: " + str(center[0]) + " len center: " + str(len(center[0])))
+            #print("Layered output: " + str(layerOutputs))
+            #print("Layered output: " + str(len(layerOutputs)))
+            #print(" Labels: " + str(label))
 
+            
 
             total_p = len(center)
             low_risk_p = status.count(2)
@@ -176,12 +205,32 @@ def run(camera='webcam', sound=False, sms=''):
             safe_p = status.count(0)
             i = 0
 
+            #message = str(label[0]) + "," + str(distance) + "," + str(center[0]) + "," + str(len(center[0])) + "," + str(status.count(1))
+
+            #message = { """label""" + ": " + str(label[0]) + ", ""distance""" + ":" + str(distance) + ", ""center""" + ":" + str(center[0]) + ", ""length""" + ": " + str(len(center[0])) + ", ""highrisk""" + ":" + str(status.count(1)) }
+
+            data = {}
+            data['label'] = str(label[0])
+            data['distance'] = str(distance)
+            data['center'] = str(center[0])
+            data['length'] = str(len(center[0]))
+            data['highrisk'] = str(status.count(1))
+            
+            print("Message: " + json.dumps(data))
+            client = EventHubClient(ADDRESS, debug=False, username=USER, password=KEY)
+            sender = client.add_sender(partition="0")
+            client.run()
+
+            sender.send(EventData(json.dumps(data)))
+
+            client.stop()
+
             for i in idf:
                 tot_str = "Number of People: " + str(total_p)
                 high_str = "High Risk: " + str(high_risk_p)
                 low_str = "Low Risk: " + str(low_risk_p)
                 safe_str = "Safe: " + str(safe_p)
-                SDD = "Social Distancing Detector"
+                SDD = "Social Distancing Detector For Employee Well Being"
 
                 cv2.putText(FR, tot_str, (20, H +25),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)

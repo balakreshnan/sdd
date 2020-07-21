@@ -8,7 +8,7 @@ nadavloebl@gmail.com
 
 ### HEADER ###
 root = Tk()
-root.title("Social Distancing Detector 1.0")
+root.title("Social Distancing Detector 1.1")
 CENTER = 3
 LEFT = 3
 RIGHT = 4
