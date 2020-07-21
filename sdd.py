@@ -168,6 +168,7 @@ def run(camera='webcam', sound=False, sms=''):
                 for j in range(len(center)):
                     ans = isclose(co_info[i], co_info[j])
                     distance = orgdist(co_info[i], co_info[j])
+                    distance1 = dist(co_info[i], co_info[j])
 
                     if ans == 1:
                         close_pair.append([center[i], center[j]])
@@ -211,10 +212,17 @@ def run(camera='webcam', sound=False, sms=''):
 
             data = {}
             data['label'] = str(label[0])
-            data['distance'] = str(distance)
+            data['distance'] = str(distance1)
             data['center'] = str(center[0])
             data['length'] = str(len(center[0]))
             data['highrisk'] = str(status.count(1))
+            data['ans'] = str(ans)
+            data['close_pair'] = str(close_pair)
+            data['s_close_pair'] = str(s_close_pair)
+            data['lowrisk'] = str(status.count(2))
+            data['safe_p'] = str(status.count(0))
+            data['total_p'] = str(total_p)
+
             
             print("Message: " + json.dumps(data))
             client = EventHubClient(ADDRESS, debug=False, username=USER, password=KEY)
