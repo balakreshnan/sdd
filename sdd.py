@@ -18,6 +18,7 @@ def isclose(p1, p2):
         _ = (p2[2][1] - p1[2][1]) / (p2[2][0] - p1[2][0])
     except ZeroDivisionError:
         _ = 1.633123935319537e+16
+        print("Only 1 Person detected")
     ve = abs(_ / ((1 + _ ** 2) ** 0.5))
     ho = abs(1 / ((1 + _ ** 2) ** 0.5))
     d_hor = ho * d
@@ -26,6 +27,7 @@ def isclose(p1, p2):
     vc_calib_ver = h * 0.4 * 0.8 # the last one is the angle
     c_calib_hor = w * 1.7
     c_calib_ver = h * 0.2 * 0.8 # the last one is the angle
+    print("Distance calculated: " + str(_))
     if 0 < d_hor < vc_calib_hor and 0 < d_ver < vc_calib_ver:
         return 1
     elif 0 < d_hor < c_calib_hor and 0 < d_ver < c_calib_ver:
@@ -58,6 +60,8 @@ def run(camera='webcam', sound=False, sms=''):
 
     weightsPath = "./yolov3.weights"
     configPath = "./yolov3.cfg"
+    #weightsPath = "./yolov5s.pt"
+    #configPath = "./yolov5s.yaml"
 
     net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
     ln = net.getLayerNames()
@@ -117,6 +121,7 @@ def run(camera='webcam', sound=False, sms=''):
                         boxes.append([x, y, int(width), int(height)])
                         confidences.append(float(confidence))
                         classIDs.append(classID)
+                        print("Boxes: " + str(box))
 
         idxs = cv2.dnn.NMSBoxes(boxes, confidences, confid, threshold)
 
@@ -162,6 +167,7 @@ def run(camera='webcam', sound=False, sms=''):
 
                         if sound:
                             playsound('alarm.mp3', block=False)
+                    print(" Social Distance Answer: " + str(ans))
 
 
             total_p = len(center)
@@ -175,7 +181,7 @@ def run(camera='webcam', sound=False, sms=''):
                 high_str = "High Risk: " + str(high_risk_p)
                 low_str = "Low Risk: " + str(low_risk_p)
                 safe_str = "Safe: " + str(safe_p)
-                SDD = "Social Distancing Detector | Nadav Loebl"
+                SDD = "Social Distancing Detector"
 
                 cv2.putText(FR, tot_str, (20, H +25),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
