@@ -263,14 +263,6 @@ def run(camera='webcam', sound=False, sms=''):
             array       = frame[6]
             image_string = str(bytearray(frame))
 
-            #print("imge height " + str(imageHeight) + " image widht: " + str(imageWidth))
-            print("Frame shape: " + str(frame.shape))
-            # Create a PIL Image from our pixel array.
-            #im = PIL.Image.frombytes("RGB", (imageWidth, imageHeight), image_string)
-            #posepredict = predict_image(im)
-            #print("Pose: " + str(posepredict))
-            #image = im.resize(self.input_shape)
-
             INPUT_TENSOR_NAME = 'image_tensor:0'
             OUTPUT_TENSOR_NAMES = ['detected_boxes:0', 'detected_scores:0', 'detected_classes:0']
             model_filename = 'model.pb'
