@@ -48,3 +48,46 @@ Above collected data is collected and stored for long term storage and also quer
 - Stream Analytics to process data from Event Hub
 - Store data in ADLS GEN2 for long term storage and anlaytics
 - Store Azure SQL Database for KPI reporting
+
+## Model Building
+
+We are using python to build the model inferencing code. We are also leveraging yolo v3 tiny version.
+
+wget https://pjreddie.com/media/files/yolov3-tiny.weights
+
+Configuration
+
+https://github.com/pjreddie/darknet/blob/master/cfg/yolov3-tiny.cfg
+
+## Code
+
+sdd_gui.py is the main visual program to start the video.
+
+sdd.py is the code which inference and does the social distancing calculation and also packages up the event and send's to event hub for further process.
+
+Sample event looks liks
+
+```
+{"label": "person", "distance": "265.41476974727686", "center": "[[580, 345], [576, 346], [317, 288]]", "length": "3", "highrisk": "3", "ans": "0", "close_pair": "[[[580, 345], [576, 346]], [[580, 345], [317, 288]], [[576, 346], [580, 345]], [[576, 346], [317, 288]], [[317, 288], [580, 
+345]], [[317, 288], [576, 346]]]", "s_close_pair": "[]", "lowrisk": "0", "safe_p": "0", "total_p": "3", "lat": "42.8895", "lon": "-87.9074", "serialno": "hack20201", "eventtime": "22/07/2020 07:23:19"}
+Message: {"label": "person", "distance": "268.68941177500835", "center": "[[583, 343], [579, 343], [316, 288]]", "length": "3", "highrisk": "3", "ans": "0", "close_pair": "[[[583, 343], [316, 288]], [[579, 343], [316, 288]], [[316, 288], [583, 343]], [[316, 288], [579, 343]]]", "s_close_pair": "[]", "lowrisk": "0", "safe_p": "0", "total_p": "3", "lat": "42.8895", "lon": "-87.9074", "serialno": "hack20201", "eventtime": "22/07/2020 07:23:21"}
+```
+
+Run the sdd_gui.py. 
+
+```
+Note: the application needs conda environment to run tensorflow models. Also the yolo and weights are needed.
+```
+
+Click Start button with out filling anything for local web camera
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/start1.jpg "Risk")
+
+Wait for the Video screen with boxes to show up.
+
+Check the output window to see messages that are sent to event hub.
+
+Risk Profile
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/risk1.jpg "Risk")
+
