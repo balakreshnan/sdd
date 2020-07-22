@@ -1,4 +1,4 @@
-# Employee Well Being - Covid workplace safety
+# Employee Well Being - Covid workplace safety analytics system
 
 ## Building systems that can protect employees when they return to work
 
