@@ -57,7 +57,9 @@ Above collected data is collected and stored for long term storage and also quer
 
 We are using python to build the model inferencing code. We are also leveraging yolo v3 tiny version.
 
+```
 wget https://pjreddie.com/media/files/yolov3-tiny.weights
+```
 
 Configuration
 
