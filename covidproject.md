@@ -207,3 +207,25 @@ Now go to SQL and display the table data
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql1.jpg "SQL")
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql2.jpg "SQL")
+
+## ToDo
+
+More to come.
+
+- work environment health work habits. Sitting vs standing ratio analysis for improve employee health
+- Work desk lightining
+
+
+## Thanks to contributors
+
+Priya Aswani
+Balamurugan Balakreshnan
+Shruti Harish
+Mickey Patel
+Prateek Gandhi
+Samson leung
+Malek el Khazen
+Dee Kumar
+Moumi Panja
+Abraham Pabbathi
+Steve Thompson
