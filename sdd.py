@@ -5,12 +5,58 @@ from azure.eventhub import EventHubClient, Sender, EventData
 import json
 import requests
 from datetime import datetime
+import argparse
+import tensorflow as tf
+import numpy as np
+import PIL.Image
+
+MODEL_FILENAME = 'model.pb'
+LABELS_FILENAME = 'labels.txt'
 
 confid, threshold = 0.5, 0.5
 
 ADDRESS = "amqps://babalingest.servicebus.windows.net/sddinput"
 USER = "ingest"
 KEY = "6Sur+IoqeH69ETumOzo0wh5V/L1FUOdpH0yzhK5cqWg="
+
+class ObjectDetection:
+    INPUT_TENSOR_NAME = 'image_tensor:0'
+    OUTPUT_TENSOR_NAMES = ['detected_boxes:0', 'detected_scores:0', 'detected_classes:0']
+
+    def __init__(self, model_filename):
+        graph_def = tf.compat.v1.GraphDef()
+        with open(model_filename, 'rb') as f:
+            graph_def.ParseFromString(f.read())
+
+        self.graph = tf.Graph()
+        with self.graph.as_default():
+            tf.import_graph_def(graph_def, name='')
+
+        # Get input shape
+        with tf.compat.v1.Session(graph=self.graph) as sess:
+            self.input_shape = sess.graph.get_tensor_by_name(self.INPUT_TENSOR_NAME).shape.as_list()[1:3]
+
+    def predict_image(self, image):
+        image = image.convert('RGB') if image.mode != 'RGB' else image
+        image = image.resize(self.input_shape)
+
+        inputs = np.array(image, dtype=np.float32)[np.newaxis, :, :, :]
+        with tf.compat.v1.Session(graph=self.graph) as sess:
+            output_tensors = [sess.graph.get_tensor_by_name(n) for n in self.OUTPUT_TENSOR_NAMES]
+            outputs = sess.run(output_tensors, {self.INPUT_TENSOR_NAME: inputs})
+            return outputs
+
+def predict(model_filename, image_filename):
+    od_model = ObjectDetection(model_filename)
+
+    image = PIL.Image.open(image_filename)
+    return od_model.predict_image(image)
+
+def predictframe(model_filename, frame):
+    od_model = ObjectDetection(model_filename)
+
+    image = PIL.Image.open(image_filename)
+    return od_model.predict_image(image)
 
 
 def dist(p1, p2):
@@ -212,7 +258,56 @@ def run(camera='webcam', sound=False, sms=''):
             #print("Layered output: " + str(len(layerOutputs)))
             #print(" Labels: " + str(label))
 
-            
+            imageWidth  = frame.shape[0]
+            imageHeight = frame.shape[1]
+            array       = frame[6]
+            image_string = str(bytearray(frame))
+
+            #print("imge height " + str(imageHeight) + " image widht: " + str(imageWidth))
+            print("Frame shape: " + str(frame.shape))
+            # Create a PIL Image from our pixel array.
+            #im = PIL.Image.frombytes("RGB", (imageWidth, imageHeight), image_string)
+            #posepredict = predict_image(im)
+            #print("Pose: " + str(posepredict))
+            #image = im.resize(self.input_shape)
+
+            INPUT_TENSOR_NAME = 'image_tensor:0'
+            OUTPUT_TENSOR_NAMES = ['detected_boxes:0', 'detected_scores:0', 'detected_classes:0']
+            model_filename = 'model.pb'
+            labels_filename = 'labels.txt'
+
+            posepredict = "";
+            posepredictprob = 0;
+
+            dim = (320, 320)
+
+            reframe = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
+
+            graph_def = tf.compat.v1.GraphDef()
+            with open(model_filename, 'rb') as f:
+                graph_def.ParseFromString(f.read())
+
+            graph = tf.Graph()
+            with graph.as_default():
+                tf.import_graph_def(graph_def, name='')
+
+            # Get input shape
+            with tf.compat.v1.Session(graph=graph) as sess:
+                sess.input_shape = sess.graph.get_tensor_by_name(INPUT_TENSOR_NAME).shape.as_list()[1:3]
+
+            inputs = np.array(reframe, dtype=np.float32)[np.newaxis, :, :, :]
+            with tf.compat.v1.Session(graph=graph) as sess:
+                output_tensors = [sess.graph.get_tensor_by_name(n) for n in OUTPUT_TENSOR_NAMES]
+                outputs = sess.run(output_tensors, {INPUT_TENSOR_NAME: inputs})
+                #print("output " + str(outputs))
+
+            with open(labels_filename) as f:
+                labels = [l.strip() for l in f.readlines()]
+
+            for pred in zip(*outputs):
+                #print(f"Class: {labels[pred[2]]}, Probability: {pred[1]}, Bounding box: {pred[0]}")
+                posepredict = labels[pred[2]]
+                posepredictprob = pred[1]
 
             total_p = len(center)
             low_risk_p = status.count(2)
@@ -241,6 +336,8 @@ def run(camera='webcam', sound=False, sms=''):
             data['serialno'] = "hack20201"
             #data['eventtime'] = datetime.now().strftime("%d-%m-%YT%H:%M:%S")
             data['eventtime'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+            data['posepredict'] = posepredict
+            data['posepredictprob'] = str(posepredictprob)
 
             
             print("Message: " + json.dumps(data))
@@ -251,6 +348,8 @@ def run(camera='webcam', sound=False, sms=''):
             sender.send(EventData(json.dumps(data)))
 
             client.stop()
+
+            
 
             for i in idf:
                 tot_str = "Number of People: " + str(total_p)
