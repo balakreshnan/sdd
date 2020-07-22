@@ -3,6 +3,7 @@ from twilio.rest import Client
 from playsound import playsound
 from azure.eventhub import EventHubClient, Sender, EventData
 import json
+import requests
 
 confid, threshold = 0.5, 0.5
 
@@ -86,6 +87,14 @@ def run(camera='webcam', sound=False, sms=''):
     ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
     FR = 0
     vs = None
+
+    #send_url = 'http://freegeoip.net/json'
+    #r = requests.get(send_url)
+    #j = json.loads(r.text)
+    #lat = j['latitude']
+    #lon = j['longitude']
+    lat = "42.8895"
+    lon = "-87.9074"
 
     if camera == 'webcam':
         vs = cv2.VideoCapture(0)
@@ -222,6 +231,9 @@ def run(camera='webcam', sound=False, sms=''):
             data['lowrisk'] = str(status.count(2))
             data['safe_p'] = str(status.count(0))
             data['total_p'] = str(total_p)
+            data['lat'] = str(lat)
+            data['lon'] = str(lon)
+            data['serialno'] = "hack20201"
 
             
             print("Message: " + json.dumps(data))
