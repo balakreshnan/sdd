@@ -37,6 +37,7 @@ WITH sddinput AS
     lat,
     lon,
     serialno,
+    eventtime,
     EventProcessedUtcTime,    
     EventEnqueuedUtcTime
     FROM input
@@ -56,8 +57,9 @@ SELECT
     lat,
     lon,
     serialno,
+    eventtime,
     EventProcessedUtcTime,    
-    EventEnqueuedUtcT
+    EventEnqueuedUtcTime
 INTO outputblob
 FROM sddinput
 
@@ -76,7 +78,8 @@ SELECT
     lat,
     lon,
     serialno,
+    eventtime,
     EventProcessedUtcTime,    
-    EventEnqueuedUtcT
+    EventEnqueuedUtcTime
 INTO sqloutput
 FROM sddinput

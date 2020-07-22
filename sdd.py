@@ -4,6 +4,7 @@ from playsound import playsound
 from azure.eventhub import EventHubClient, Sender, EventData
 import json
 import requests
+from datetime import datetime
 
 confid, threshold = 0.5, 0.5
 
@@ -161,6 +162,7 @@ def run(camera='webcam', sound=False, sms=''):
             s_close_pair = []
             center = []
             co_info = []
+            distance1 = 0
 
             for i in idf:
                 (x, y) = (boxes[i][0], boxes[i][1])
@@ -177,7 +179,10 @@ def run(camera='webcam', sound=False, sms=''):
                 for j in range(len(center)):
                     ans = isclose(co_info[i], co_info[j])
                     distance = orgdist(co_info[i], co_info[j])
-                    distance1 = dist(co_info[i], co_info[j])
+
+                    if dist(center[i], center[j]) > 0:
+                        distance1 = dist(center[i], center[j])
+                        #print("Distance calculated: " + str(distance1))
 
                     if ans == 1:
                         close_pair.append([center[i], center[j]])
@@ -222,8 +227,8 @@ def run(camera='webcam', sound=False, sms=''):
             data = {}
             data['label'] = str(label[0])
             data['distance'] = str(distance1)
-            data['center'] = str(center[0])
-            data['length'] = str(len(center[0]))
+            data['center'] = str(center)
+            data['length'] = str(len(center))
             data['highrisk'] = str(status.count(1))
             data['ans'] = str(ans)
             data['close_pair'] = str(close_pair)
@@ -234,6 +239,8 @@ def run(camera='webcam', sound=False, sms=''):
             data['lat'] = str(lat)
             data['lon'] = str(lon)
             data['serialno'] = "hack20201"
+            #data['eventtime'] = datetime.now().strftime("%d-%m-%YT%H:%M:%S")
+            data['eventtime'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 
             
             print("Message: " + json.dumps(data))
