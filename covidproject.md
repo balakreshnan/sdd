@@ -91,3 +91,107 @@ Risk Profile
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/risk1.jpg "Risk")
 
+## Process Events from Event hub
+
+To process events form event hub we are using stream analytics to read the events from event hub and write to 2 outputs here
+
+- Azure data lake store gen2 for long term storage
+- Azure SQL database for reporting
+
+SQL Schema
+
+```
+create table dbo.sdddeetails
+(
+    label varchar(50),
+    distance varchar(100),
+    center varchar(100),
+    length varchar(50),
+    highrisk varchar(50),
+    ans varchar(50),
+    close_pair varchar(200),
+    s_close_pair varchar(200),
+    lowrisk varchar(50),
+    safe_p varchar(50),
+    total_p varchar(50),
+    lat varchar(50),
+    lon varchar(50),
+    serialno varchar(50),
+    EventProcessedUtcTime datetime,
+    EventEnqueuedUtcTime datetime
+)
+```
+
+Stream Analytics
+
+```
+WITH sddinput AS
+(
+    SELECT
+    label,
+    distance,
+    center,
+    length,
+    highrisk,
+    ans,
+    close_pair,
+    s_close_pair,
+    lowrisk,
+    safe_p,
+    total_p,
+    lat,
+    lon,
+    serialno,
+    eventtime,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime
+    FROM input
+)
+SELECT
+    label,
+    distance,
+    center,
+    length,
+    highrisk,
+    ans,
+    close_pair,
+    s_close_pair,
+    lowrisk,
+    safe_p,
+    total_p,
+    lat,
+    lon,
+    serialno,
+    eventtime,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime
+INTO outputblob
+FROM sddinput
+
+SELECT
+    label,
+    distance,
+    center,
+    length,
+    highrisk,
+    ans,
+    close_pair,
+    s_close_pair,
+    lowrisk,
+    safe_p,
+    total_p,
+    lat,
+    lon,
+    serialno,
+    eventtime,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime
+INTO sqloutput
+FROM sddinput
+```
+
+Now go to SQL and display the table data
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql1.jpg "SQL")
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql2.jpg "SQL")
