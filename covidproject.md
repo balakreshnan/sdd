@@ -213,7 +213,12 @@ Now go to SQL and display the table data
 More to come.
 
 - work environment health work habits. Sitting vs standing ratio analysis for improve employee health
-- Work desk lightining
+- Work desk lighting
+- Sitting Pose detector
+- Tiredness detection
+- Stress detection
+- Alergy detection
+- Sneeze and Cough detection
 
 ## Thanks to contributors
 
