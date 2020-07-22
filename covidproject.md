@@ -217,14 +217,14 @@ More to come.
 
 ## Thanks to contributors
 
-Priya Aswani
-Balamurugan Balakreshnan
-Shruti Harish
-Mickey Patel
-Prateek Gandhi
-Samson leung
-Malek el Khazen
-Dee Kumar
-Moumi Panja
-Abraham Pabbathi
-Steve Thompson
+- Priya Aswani
+- Balamurugan Balakreshnan
+- Shruti Harish
+- Mickey Patel
+- Prateek Gandhi
+- Samson leung
+- Malek el Khazen
+- Dee Kumar
+- Moumi Panja
+- Abraham Pabbathi
+- Steve Thompson
