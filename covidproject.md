@@ -40,7 +40,7 @@ Above collected data is collected and stored for long term storage and also quer
 
 ## Steps
 
-- Model Building
+- Model Building <br/>
     Use Existing open source yolo v3 model <br/>
     Calculate social Distance <br/>
     Build Model to detect Mask <br/>
