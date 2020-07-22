@@ -215,7 +215,6 @@ More to come.
 - work environment health work habits. Sitting vs standing ratio analysis for improve employee health
 - Work desk lightining
 
-
 ## Thanks to contributors
 
 Priya Aswani
