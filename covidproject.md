@@ -104,6 +104,12 @@ To process events form event hub we are using stream analytics to read the event
 - Azure data lake store gen2 for long term storage
 - Azure SQL database for reporting
 
+## Azure Data Lake Store 
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/adlsgen21.jpg "ADLS gen 2")
+
+## Azure SQL 
+
 SQL Schema
 
 ```
@@ -128,7 +134,7 @@ create table dbo.sdddeetails
 )
 ```
 
-Stream Analytics
+## Azure Stream Analytics
 
 ```
 WITH sddinput AS
