@@ -300,6 +300,7 @@ def run(camera='webcam', sound=False, sms=''):
                 #print(f"Class: {labels[pred[2]]}, Probability: {pred[1]}, Bounding box: {pred[0]}")
                 posepredict = labels[pred[2]]
                 posepredictprob = pred[1]
+                break
 
             total_p = len(center)
             low_risk_p = status.count(2)
