@@ -49,6 +49,10 @@ Above collected data is collected and stored for long term storage and also quer
 - Store data in ADLS GEN2 for long term storage and anlaytics
 - Store Azure SQL Database for KPI reporting
 
+## Sequence diagram
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/flow1.jpg "Flow")
+
 ## Model Building
 
 We are using python to build the model inferencing code. We are also leveraging yolo v3 tiny version.
