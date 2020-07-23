@@ -305,6 +305,5 @@ More to come.
 - Samson leung
 - Malek el Khazen
 - Dee Kumar
-- Moumi Panja
 - Abraham Pabbathi
 - Steve Thompson
