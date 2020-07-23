@@ -278,6 +278,12 @@ LABELS_FILENAME = 'labels.txt'
                 posepredictprob = pred[1]
 ```
 
+Model predicted and it's output
+
+## Model Output for Sitting/Standing
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql3.jpg "SQL")
+
 ## ToDo
 
 More to come.
