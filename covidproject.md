@@ -34,7 +34,7 @@ Above collected data is collected and stored for long term storage and also quer
 
 ## Architecture
 
-![alt text](https://github.com/balakreshnan/sdd/blob/master/images/hack2020-1.jpg "Architecture")
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/hack2020-2.jpg "Architecture")
 
 ## Architecture Explained.
 
