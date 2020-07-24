@@ -300,6 +300,26 @@ Model predicted and it's output
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql3.jpg "SQL")
 
+## Power Apps
+
+Here is sample power apps code.
+
+- Log into Power Apps Designer
+- Create a data source to Azure SQL Database
+- Create a canvas app
+- Connect to the SQL data base
+- Create a formula to if high risk count is > 0 then change the color to Red other wise make it green
+
+```
+in the formule: If(Value(ThisItem.highrisk) > 0, Red, Green)
+```
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/powerapps1.jpg "Power Apps")
+
+Detailed
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/powerapps2.jpg "Power Apps")
+
 ## ToDo
 
 More to come.
