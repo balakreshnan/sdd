@@ -129,6 +129,10 @@ create table dbo.sdddeetails
     lat varchar(50),
     lon varchar(50),
     serialno varchar(50),
+    posepredict varchar(50,
+    posepredictprob varchar(50),
+    maskPredict varchar(50,
+    maskPredictProb varchar(50),
     EventProcessedUtcTime datetime,
     EventEnqueuedUtcTime datetime
 )
@@ -155,6 +159,10 @@ WITH sddinput AS
     lon,
     serialno,
     eventtime,
+    posepredict,
+    posepredictprob,
+    maskPredict,
+    maskPredictProb,
     EventProcessedUtcTime,
     EventEnqueuedUtcTime
     FROM input
@@ -175,6 +183,10 @@ SELECT
     lon,
     serialno,
     eventtime,
+    posepredict,
+    posepredictprob,
+    maskPredict,
+    maskPredictProb,
     EventProcessedUtcTime,
     EventEnqueuedUtcTime
 INTO outputblob
@@ -196,6 +208,10 @@ SELECT
     lon,
     serialno,
     eventtime,
+    posepredict,
+    posepredictprob,
+    maskPredict,
+    maskPredictProb,
     EventProcessedUtcTime,
     EventEnqueuedUtcTime
 INTO sqloutput

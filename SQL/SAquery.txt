@@ -16,6 +16,8 @@ create table dbo.sdddeetails
     serialno varchar(50),
     posepredict varchar(50,
     posepredictprob varchar(50),
+    maskPredict varchar(50,
+    maskPredictProb varchar(50),
     EventProcessedUtcTime datetime,    
     EventEnqueuedUtcTime datetime
 )
@@ -42,6 +44,8 @@ WITH sddinput AS
     eventtime,
     posepredict,
     posepredictprob,
+    maskPredict,
+    maskPredictProb,
     EventProcessedUtcTime,    
     EventEnqueuedUtcTime
     FROM input
@@ -64,6 +68,8 @@ SELECT
     eventtime,
     posepredict,
     posepredictprob,
+    maskPredict,
+    maskPredictProb,
     EventProcessedUtcTime,    
     EventEnqueuedUtcTime
 INTO outputblob
@@ -87,6 +93,8 @@ SELECT
     eventtime,
     posepredict,
     posepredictprob,
+    maskPredict,
+    maskPredictProb,
     EventProcessedUtcTime,    
     EventEnqueuedUtcTime
 INTO sqloutput
