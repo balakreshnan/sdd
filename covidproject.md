@@ -311,7 +311,7 @@ Here is sample power apps code.
 - Create a formula to if high risk count is > 0 then change the color to Red other wise make it green
 
 ```
-in the formule: If(Value(ThisItem.highrisk) > 0, Red, Green)
+in the formula: If(Value(ThisItem.highrisk) > 0, Red, Green)
 ```
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/powerapps1.jpg "Power Apps")
