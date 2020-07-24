@@ -268,8 +268,8 @@ def run(camera='webcam', sound=False, sms=''):
             model_filename = 'model.pb'
             labels_filename = 'labels.txt'
 
-            posepredict = "";
-            posepredictprob = 0;
+            posepredict = ""
+            posepredictprob = 0
 
             dim = (320, 320)
 
@@ -308,6 +308,40 @@ def run(camera='webcam', sound=False, sms=''):
             safe_p = status.count(0)
             i = 0
 
+            # Mask Detection
+            maskModel_filename = 'maskModel.pb'
+            maskLabels_filename = 'maskLabels.txt'
+
+            maskPredict = ""
+            maskPredictProb = 0
+
+            graph_def = tf.compat.v1.GraphDef()
+            with open(maskModel_filename, 'rb') as f:
+                graph_def.ParseFromString(f.read())
+
+            graph = tf.Graph()
+            with graph.as_default():
+                tf.import_graph_def(graph_def, name='')
+
+            # Get input shape
+            with tf.compat.v1.Session(graph=graph) as sess:
+                sess.input_shape = sess.graph.get_tensor_by_name(INPUT_TENSOR_NAME).shape.as_list()[1:3]
+
+            inputs = np.array(reframe, dtype=np.float32)[np.newaxis, :, :, :]
+            with tf.compat.v1.Session(graph=graph) as sess:
+                output_tensors = [sess.graph.get_tensor_by_name(n) for n in OUTPUT_TENSOR_NAMES]
+                outputs = sess.run(output_tensors, {INPUT_TENSOR_NAME: inputs})
+                #print("output " + str(outputs))
+
+            with open(maskLabels_filename) as f:
+                labels = [l.strip() for l in f.readlines()]
+
+            for pred in zip(*outputs):
+                #print(f"Class: {labels[pred[2]]}, Probability: {pred[1]}, Bounding box: {pred[0]}")
+                maskPredict = labels[pred[2]]
+                maskPreductProb = pred[1]
+                break
+
             #message = str(label[0]) + "," + str(distance) + "," + str(center[0]) + "," + str(len(center[0])) + "," + str(status.count(1))
 
             #message = { """label""" + ": " + str(label[0]) + ", ""distance""" + ":" + str(distance) + ", ""center""" + ":" + str(center[0]) + ", ""length""" + ": " + str(len(center[0])) + ", ""highrisk""" + ":" + str(status.count(1)) }
@@ -331,6 +365,8 @@ def run(camera='webcam', sound=False, sms=''):
             data['eventtime'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             data['posepredict'] = posepredict
             data['posepredictprob'] = str(posepredictprob)
+            data['maskPredict'] = maskPredict
+            data['maskPredictProb'] = str(maskPreductProb)
 
             
             print("Message: " + json.dumps(data))
