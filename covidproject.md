@@ -53,6 +53,16 @@ Above collected data is collected and stored for long term storage and also quer
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/flow1.jpg "Flow")
 
+## Logic Flow diagram
+
+For Social Distancing detector <br/>
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/socialDistDetector.jpg "Social Distancing")
+
+For Reporting and Cloud processing <br/>
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/Reporting.jpg "Reporting")
+
 ## Model Building
 
 We are using python to build the model inferencing code. We are also leveraging yolo v3 tiny version.
