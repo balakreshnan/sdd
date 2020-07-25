@@ -32,6 +32,10 @@ Above collected data is collected and stored for long term storage and also quer
 - Map of devices and show count of violation on a map - to cover different locations.
 - Drill down based on locations for above KPI.
 
+## Whiteboard - Architectural Design Session Outcome
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/whiteboard1.png "Whiteboard")
+
 ## Architecture
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/hack2020-2.jpg "Architecture")
