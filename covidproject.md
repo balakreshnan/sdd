@@ -152,7 +152,65 @@ create table dbo.sdddeetails
 )
 ```
 
+Let's add more details to the modeling to hold company, locations and serial no.
+
+```
+create table company
+(
+    companyid bigint IDENTITY(1,1),
+    companyname varchar(250),
+    address1 varchar(250),
+    address2 varchar(250),
+    city varchar(100),
+    state varchar(50),
+    zip varchar(15),
+    country varchar(250),
+    parent varchar(1),
+    parentid bigint,
+    inserttime datetime
+)
+
+insert into company(companyname, address1,city,state,zip,country,parent,parentid,inserttime) values('company A', '850 east address street','city','WA','xxxxx','US','n',0,getdate())
+
+create table locations
+(
+    locationid bigint IDENTITY(1,1),
+    companyid bigint,
+    locationname varchar(200),
+    address1 varchar(250),
+    address2 varchar(250),
+    city varchar(100),
+    state varchar(50),
+    zip varchar(15),
+    country varchar(250),
+    latitude varchar(25),
+    longitude varchar(25),
+    active varchar(1),
+    inserttime datetime
+)
+
+insert into locations(companyid,locationname,address1,city,state,zip,country,latitude,longitude,active,inserttime) values(1,'city','1 dre ave','xyz','WI','12345','US','xxxxxxxx','xxxxxxxx','1',getdate())
+
+
+create table serialno
+(
+    id bigint IDENTITY(1,1),
+    locationid bigint,
+    serialno varchar(100),
+    latitude varchar(25),
+    longitude varchar(25),
+    active varchar(1),
+    inserttime datetime
+)
+
+insert into serialno(locationid,serialno,latitude,longitude,active,inserttime) values (1,'hack20201','xxxxxxx','xxxxxx','1',getdate())
+```
+
 ## Azure Stream Analytics
+
+Since we are writing to multiple locations, we are creating a CTE to hold the temp data and then write to multiple location. 
+
+We can also do windowing, anamoly and other aggregation in stream analytics and persist to table also.
 
 ```
 WITH sddinput AS
