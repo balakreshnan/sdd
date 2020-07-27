@@ -204,6 +204,23 @@ create table serialno
 )
 
 insert into serialno(locationid,serialno,latitude,longitude,active,inserttime) values (1,'hack20201','xxxxxxx','xxxxxx','1',getdate())
+
+create table violationaggr
+(
+SerialNo varchar(50),
+Label varchar(50),
+Avgdistance float,
+Maxdistance float,
+Mindistance float,
+Countofhighrisk float,
+Avghighrisk float,
+Countsafep float,
+Avgsafep float,
+Counttotalp float,
+Avgtotalp float,
+StartTime datetime,
+EndTime datetime
+)
 ```
 
 ## Azure Stream Analytics
@@ -288,6 +305,23 @@ SELECT
     EventEnqueuedUtcTime
 INTO sqloutput
 FROM sddinput
+
+SELECT 
+    serialno,
+    avg(CAST(distance as bigint)) as Avgdistance,
+    max(CAST(distance as bigint)) as Maxdistance,
+    min(CAST(distance as bigint)) as Mindistance,
+    COUNT(CAST(highrisk as bigint)) as Countofhighrisk,
+    AVG(CAST(highrisk as bigint)) as Avghighrisk,
+    COUNT(CAST(safe_p as bigint)) as Countsafep,
+    AVG(CAST(safe_p as bigint)) as Avgsafep,
+    COUNT(CAST(total_p as bigint)) as Counttotalp,
+    AVG(CAST(total_p as bigint)) as Avgtotalp,
+    min(CAST(eventtime as datetime)) as StartTime,
+    max(CAST(eventtime as datetime)) as EndTime
+INTO aggrsqloutput
+FROM sddinput
+Group by serialno, TumblingWindow(minute, 1)
 ```
 
 Now go to SQL and display the table data
