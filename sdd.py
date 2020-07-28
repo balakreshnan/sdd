@@ -360,7 +360,7 @@ def run(camera='webcam', sound=False, sms=''):
             data['total_p'] = str(total_p)
             data['lat'] = str(lat)
             data['lon'] = str(lon)
-            data['serialno'] = "hack20204"
+            data['serialno'] = "hack20206"
             #data['eventtime'] = datetime.now().strftime("%d-%m-%YT%H:%M:%S")
             data['eventtime'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             data['posepredict'] = posepredict
