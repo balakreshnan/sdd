@@ -225,6 +225,10 @@ EndTime datetime
 
 Now let's build the SQL data store to store all data and do some data modelling.
 
+```
+Note the above company, location tables are sample. for proper implementation please use below data model.
+```
+
 Here is the ER diagram for more meta data for the above data we are collecting.
 
 To make it a real system we decided to add more details.
