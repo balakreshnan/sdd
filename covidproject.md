@@ -122,7 +122,7 @@ To process events form event hub we are using stream analytics to read the event
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/adlsgen21.jpg "ADLS gen 2")
 
-## Azure SQL 
+## Azure SQL Databse
 
 SQL Schema
 
@@ -223,114 +223,7 @@ EndTime datetime
 )
 ```
 
-## Azure Stream Analytics
-
-Since we are writing to multiple locations, we are creating a CTE to hold the temp data and then write to multiple location. 
-
-We can also do windowing, anamoly and other aggregation in stream analytics and persist to table also.
-
-```
-WITH sddinput AS
-(
-    SELECT
-    label,
-    distance,
-    center,
-    length,
-    highrisk,
-    ans,
-    close_pair,
-    s_close_pair,
-    lowrisk,
-    safe_p,
-    total_p,
-    lat,
-    lon,
-    serialno,
-    eventtime,
-    posepredict,
-    posepredictprob,
-    maskPredict,
-    maskPredictProb,
-    EventProcessedUtcTime,
-    EventEnqueuedUtcTime
-    FROM input
-)
-SELECT
-    label,
-    distance,
-    center,
-    length,
-    highrisk,
-    ans,
-    close_pair,
-    s_close_pair,
-    lowrisk,
-    safe_p,
-    total_p,
-    lat,
-    lon,
-    serialno,
-    eventtime,
-    posepredict,
-    posepredictprob,
-    maskPredict,
-    maskPredictProb,
-    EventProcessedUtcTime,
-    EventEnqueuedUtcTime
-INTO outputblob
-FROM sddinput
-
-SELECT
-    label,
-    distance,
-    center,
-    length,
-    highrisk,
-    ans,
-    close_pair,
-    s_close_pair,
-    lowrisk,
-    safe_p,
-    total_p,
-    lat,
-    lon,
-    serialno,
-    eventtime,
-    posepredict,
-    posepredictprob,
-    maskPredict,
-    maskPredictProb,
-    EventProcessedUtcTime,
-    EventEnqueuedUtcTime
-INTO sqloutput
-FROM sddinput
-
-SELECT 
-    serialno,
-    avg(CAST(distance as bigint)) as Avgdistance,
-    max(CAST(distance as bigint)) as Maxdistance,
-    min(CAST(distance as bigint)) as Mindistance,
-    COUNT(CAST(highrisk as bigint)) as Countofhighrisk,
-    AVG(CAST(highrisk as bigint)) as Avghighrisk,
-    COUNT(CAST(safe_p as bigint)) as Countsafep,
-    AVG(CAST(safe_p as bigint)) as Avgsafep,
-    COUNT(CAST(total_p as bigint)) as Counttotalp,
-    AVG(CAST(total_p as bigint)) as Avgtotalp,
-    min(CAST(eventtime as datetime)) as StartTime,
-    max(CAST(eventtime as datetime)) as EndTime
-INTO aggrsqloutput
-FROM sddinput
-Group by serialno, TumblingWindow(minute, 1)
-```
-
-## Azure SQL Database
-
-Now go to SQL and display the table data
-
-![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql1.jpg "SQL")
-
-![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql2.jpg "SQL")
+Now let's build the SQL data store to store all data and do some data modelling.
 
 Here is the ER diagram for more meta data for the above data we are collecting.
 
@@ -544,6 +437,116 @@ GO
 ALTER TABLE [dbo].[violationaggr] CHECK CONSTRAINT [FK_violationaggr_SerialNumber]
 GO
 ```
+
+## Azure Stream Analytics
+
+Since we are writing to multiple locations, we are creating a CTE to hold the temp data and then write to multiple location. 
+
+We can also do windowing, anamoly and other aggregation in stream analytics and persist to table also.
+
+```
+WITH sddinput AS
+(
+    SELECT
+    label,
+    distance,
+    center,
+    length,
+    highrisk,
+    ans,
+    close_pair,
+    s_close_pair,
+    lowrisk,
+    safe_p,
+    total_p,
+    lat,
+    lon,
+    serialno,
+    eventtime,
+    posepredict,
+    posepredictprob,
+    maskPredict,
+    maskPredictProb,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime
+    FROM input
+)
+SELECT
+    label,
+    distance,
+    center,
+    length,
+    highrisk,
+    ans,
+    close_pair,
+    s_close_pair,
+    lowrisk,
+    safe_p,
+    total_p,
+    lat,
+    lon,
+    serialno,
+    eventtime,
+    posepredict,
+    posepredictprob,
+    maskPredict,
+    maskPredictProb,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime
+INTO outputblob
+FROM sddinput
+
+SELECT
+    label,
+    distance,
+    center,
+    length,
+    highrisk,
+    ans,
+    close_pair,
+    s_close_pair,
+    lowrisk,
+    safe_p,
+    total_p,
+    lat,
+    lon,
+    serialno,
+    eventtime,
+    posepredict,
+    posepredictprob,
+    maskPredict,
+    maskPredictProb,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime
+INTO sqloutput
+FROM sddinput
+
+SELECT 
+    serialno,
+    avg(CAST(distance as bigint)) as Avgdistance,
+    max(CAST(distance as bigint)) as Maxdistance,
+    min(CAST(distance as bigint)) as Mindistance,
+    COUNT(CAST(highrisk as bigint)) as Countofhighrisk,
+    AVG(CAST(highrisk as bigint)) as Avghighrisk,
+    COUNT(CAST(safe_p as bigint)) as Countsafep,
+    AVG(CAST(safe_p as bigint)) as Avgsafep,
+    COUNT(CAST(total_p as bigint)) as Counttotalp,
+    AVG(CAST(total_p as bigint)) as Avgtotalp,
+    min(CAST(eventtime as datetime)) as StartTime,
+    max(CAST(eventtime as datetime)) as EndTime
+INTO aggrsqloutput
+FROM sddinput
+Group by serialno, TumblingWindow(minute, 1)
+```
+
+## Azure SQL Database
+
+Now go to SQL and display the table data
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql1.jpg "SQL")
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql2.jpg "SQL")
+
 
 ## Azure Custom Vision model to detect Sitting or Standing position.
 
