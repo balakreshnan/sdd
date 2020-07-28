@@ -1,0 +1,24 @@
+thank you samson. Hi every one hope you have are having a amazing day. Very excited to walk you all through the solution we architected, designed and built for the above use case.
+
+White board slide:
+
+i am going walthrough the whiteboard on how we came up with the solution. So from left to right, first we wanted to have a means to collect data using camera and also having a AI intelligent edge which can run powerful Deep learning models to inference person's and identify if they are wearing mask and how far apart are each other and calculate distance. Once the distance is calculated and if the distance is less than 6 feet (which are based on baseline numbers) we can show red bozes with red lines between the person's centers. the center red line enforces social distancing and we would like to display that in display and also sounding alarm to warn the crowd gently. 
+
+Architecture slide
+
+The data collected (not pictures or video) are then transmitted to event hub and processed through stream analytics to store for long term storage in ADLS gen2 and then store in Azure SQL for reporting. From this point we can provide dashboard for business users using power bi through visual devices.
+
+Demo
+
+i would like to show the demo of how our intelligent AI edge infereces in real time.
+
+One of the value add we provide is Risk profiles which shows how close and farther based on our own risk scores based on how close the people are.
+
+Conclusion
+
+The solutions follow our well architectured, to process data and model building we use Azure Cognitive services and then integrate the model into inference AI intelligent edge.
+
+We also tied to sue Azure PaaS services covering Analytics, IoT and AI combined to show value to customers how a scalable cloud platform with platform as a service can do and provide value. Which provides faster ROI and also provides customer/employee's the peace of mind and comfort to come and work in the facility.
+
+thank you for listening to our solution and hope you all enjoyed and now i am going to pass it along to prateek and dee kumar to do deep into analytics and dashboard capability.
+
