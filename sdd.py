@@ -9,6 +9,7 @@ import argparse
 import tensorflow as tf
 import numpy as np
 import PIL.Image
+import random
 
 MODEL_FILENAME = 'model.pb'
 LABELS_FILENAME = 'labels.txt'
@@ -360,7 +361,8 @@ def run(camera='webcam', sound=False, sms=''):
             data['total_p'] = str(total_p)
             data['lat'] = str(lat)
             data['lon'] = str(lon)
-            data['serialno'] = "hack20201"
+            #data['serialno'] = "hack20201"
+            data['serialno'] = "hack2020" + str(random.randint(1, 7))
             #data['eventtime'] = datetime.now().strftime("%d-%m-%YT%H:%M:%S")
             data['eventtime'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             data['posepredict'] = posepredict

@@ -444,9 +444,41 @@ GO
 
 ## Azure Stream Analytics
 
-Since we are writing to multiple locations, we are creating a CTE to hold the temp data and then write to multiple location. 
+Since we are writing to multiple locations, we are creating a CTE to hold the temp data and then write to multiple location.
 
 We can also do windowing, anamoly and other aggregation in stream analytics and persist to table also.
+
+stream analytics has 2 inputs and 4 outputs
+
+inputs
+
+```
+input - Event hub input for device data
+sqlreferenceinput - Azure SQL based Reference data for power bi realtime
+```
+
+SQL input Reference Data query
+
+```
+select address1,city,state,b.BuildingName,Latitude,Longitude,FloorNumber, RoomName, DeviceSerialNumber  from Location a
+inner join Buildings b
+on a.LocationId = b.LocationId
+inner join BuildingRooms c
+on b.BuildingId = c.BuildingId
+inner join BuildingDevices d
+on d.RoomId = c.RoomId
+inner join Devices e
+on e.DeviceId = d.DeviceId
+```
+
+Outputs
+
+```
+outputblob - Output for ADLS gen2 storage for long term
+aggrsqloutput - Aggregated output every 1 minute to Azure SQL database table
+sqloutput - Raw data parsed and stored in Azure SQL database table for power BI report
+pbioutput - Streaming data set to Power BI
+```
 
 ```
 WITH sddinput AS
@@ -526,18 +558,37 @@ INTO sqloutput
 FROM sddinput
 
 SELECT 
+    sddinput.serialno,
+    sqlreferenceinput.city,
+    avg(CAST(sddinput.distance as bigint)) as Avgdistance,
+    max(CAST(sddinput.distance as bigint)) as Maxdistance,
+    min(CAST(sddinput.distance as bigint)) as Mindistance,
+    COUNT(CAST(sddinput.highrisk as bigint)) as Countofhighrisk,
+    AVG(CAST(sddinput.highrisk as bigint)) as Avghighrisk,
+    COUNT(CAST(sddinput.safe_p as bigint)) as Countsafep,
+    AVG(CAST(sddinput.safe_p as bigint)) as Avgsafep,
+    COUNT(CAST(sddinput.total_p as bigint)) as Counttotalp,
+    AVG(CAST(sddinput.total_p as bigint)) as Avgtotalp,
+    min(CAST(sddinput.eventtime as datetime)) as StartTime,
+    max(CAST(sddinput.eventtime as datetime)) as EndTime
+INTO pbioutput
+FROM sddinput inner join sqlreferenceinput
+on sddinput.serialno = sqlreferenceinput.DeviceSerialNumber
+Group by sddinput.serialno, sqlreferenceinput.city, TumblingWindow(minute, 1)
+
+SELECT 
     serialno,
-    avg(CAST(distance as bigint)) as Avgdistance,
-    max(CAST(distance as bigint)) as Maxdistance,
-    min(CAST(distance as bigint)) as Mindistance,
-    COUNT(CAST(highrisk as bigint)) as Countofhighrisk,
-    AVG(CAST(highrisk as bigint)) as Avghighrisk,
-    COUNT(CAST(safe_p as bigint)) as Countsafep,
-    AVG(CAST(safe_p as bigint)) as Avgsafep,
-    COUNT(CAST(total_p as bigint)) as Counttotalp,
-    AVG(CAST(total_p as bigint)) as Avgtotalp,
-    min(CAST(eventtime as datetime)) as StartTime,
-    max(CAST(eventtime as datetime)) as EndTime
+    avg(CAST(sddinput.distance as bigint)) as Avgdistance,
+    max(CAST(sddinput.distance as bigint)) as Maxdistance,
+    min(CAST(sddinput.distance as bigint)) as Mindistance,
+    COUNT(CAST(sddinput.highrisk as bigint)) as Countofhighrisk,
+    AVG(CAST(sddinput.highrisk as bigint)) as Avghighrisk,
+    COUNT(CAST(sddinput.safe_p as bigint)) as Countsafep,
+    AVG(CAST(sddinput.safe_p as bigint)) as Avgsafep,
+    COUNT(CAST(sddinput.total_p as bigint)) as Counttotalp,
+    AVG(CAST(sddinput.total_p as bigint)) as Avgtotalp,
+    min(CAST(sddinput.eventtime as datetime)) as StartTime,
+    max(CAST(sddinput.eventtime as datetime)) as EndTime
 INTO aggrsqloutput
 FROM sddinput
 Group by serialno, TumblingWindow(minute, 1)
@@ -627,6 +678,16 @@ Model predicted and it's output
 ## Model Output for Sitting/Standing
 
 ![alt text](https://github.com/balakreshnan/sdd/blob/master/images/sql3.jpg "SQL")
+
+## Power BI
+
+## Report
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/powerbi2.jpg "Batch report")
+
+## Realtime Report
+
+![alt text](https://github.com/balakreshnan/sdd/blob/master/images/powerbirealtime1.jpg "RealTime report")
 
 ## Power Apps
 
