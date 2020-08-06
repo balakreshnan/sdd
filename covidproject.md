@@ -720,6 +720,11 @@ More to come.
 - Alergy detection
 - Sneeze and Cough detection
 
+## Credit
+
+- Yolo
+- Nadav Loebl - nadavloebl@gmail.com (MS) for Social Distance calcualtion.
+
 ## Thanks to contributors
 
 - Priya Aswani
